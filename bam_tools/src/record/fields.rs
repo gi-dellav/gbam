@@ -5,6 +5,7 @@ use crate::{U16_SIZE, U32_SIZE, U8_SIZE};
 use serde::{Deserialize, Serialize};
 
 use std::slice::Iter;
+use std::str::FromStr;
 
 // To avoid visual clutter (no need to write Fields::* each time).
 use self::Fields::*;
@@ -121,6 +122,34 @@ impl std::fmt::Display for Fields {
     }
 }
 
+impl FromStr for Fields {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "RefID" => Ok(Fields::RefID),
+            "Pos" => Ok(Fields::Pos),
+            "Mapq" => Ok(Fields::Mapq),
+            "Bin" => Ok(Fields::Bin),
+            "Flags" => Ok(Fields::Flags),
+            "NextRefID" => Ok(Fields::NextRefID),
+            "NextPos" => Ok(Fields::NextPos),
+            "TemplateLength" => Ok(Fields::TemplateLength),
+            "ReadName" => Ok(Fields::ReadName),
+            "RawCigar" => Ok(Fields::RawCigar),
+            "RawSequence" => Ok(Fields::RawSequence),
+            "RawQual" => Ok(Fields::RawQual),
+            "RawTags" => Ok(Fields::RawTags),
+            "LName" => Ok(Fields::LName),
+            "NCigar" => Ok(Fields::NCigar),
+            "SequenceLength" => Ok(Fields::SequenceLength),
+            "RawTagsLen" => Ok(Fields::RawTagsLen),
+            "RawSeqLen" => Ok(Fields::RawSeqLen),
+            _ => Err(()),
+        }
+    }
+}
+
 /// Type of Field.
 #[derive(Debug)]
 #[allow(missing_docs)]
@@ -154,6 +183,7 @@ pub fn field_type(field: &Fields) -> FieldType {
         | Fields::RawTags => FieldType::VariableSized,
     }
 }
+
 
 /// Returns enum name of index field for particular variable sized field
 pub fn var_size_field_to_index(field: &Fields) -> Fields {
